@@ -2,5 +2,7 @@
   "game": "Bounty of One",
   "authors": ["Zohma (Tooobiii)"],
   "world_version": "0.0.1",
-  "minimum_ap_version": "0.6.7"
+  "minimum_ap_version": "0.6.7",
+  "repository": "https://https://github.com/Tooobiii/bounty-of-one-apworld",
+  "license": "MIT"
 }
