@@ -43,7 +43,7 @@ boo_data = {
     "progressive": {
         "Upgrade Rarity": 5,
         "Object Rarity": 4,
-        #"Infamy": 10,
+        "Infamy": 10,
         "Double Coin Drop Chance": 10,
     },
     "permanent": [

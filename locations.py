@@ -53,12 +53,30 @@ class LocationCreator:
         self.create_locations()
         self.create_completion()
 
-    # TODO Create actual locations and completions in the world
+    # TODO Create actual locations in the world
     def create_locations(self):
         pass
 
     def create_completion(self):
-        pass
+        # Undertaker
+        if self.world.options.goal == 0:
+            for region in self.world.multiworld.get_regions(self.world.player):
+                if region.name == "Undertaker":
+                    for character in self.data["characters"]:
+                        region.add_event(
+                            f"Victory {character}", "Victory", location_type=BountyOfOneLocation,
+                            item_type=items.BountyOfOneItem
+                    )
+                elif region.name.startswith("Undertaker"):
+                    _, character = region.name.split()
+                    region.add_event(
+                        f"Victory {character}", "Victory", location_type=BountyOfOneLocation,
+                        item_type=items.BountyOfOneItem
+                    )
+        # TODO Infamy
+        if self.world.option.goal == 1:
+            pass
+
 
     def get_location_names_with_ids(self, location_names):
         return {location_name: self.world.location_name_to_id[location_name] for location_name in location_names}

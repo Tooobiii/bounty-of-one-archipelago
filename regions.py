@@ -51,13 +51,27 @@ class RegionManager:
         Region generation for menu
         """
         self.add_region("Menu")
+        self.connections.append(("Menu", "Infamy Zero"))
+
         if self.world.options.chests_per_character or self.world.options.kills_per_character:
             for character in self.data["characters"]:
                 self.connections.append(("Menu", f"Character Unlocked: {character}"))
+                if self.world.options.kills_per_character:
+                    self.connections.append((f"Character Unlocked {character}", f"Phase One {character}"))
+                else:
+                    self.connections.append((f"Character Unlocked: {character}", "Phase One "))
         else:
             self.connections.append(("Menu", "Phase One"))
 
-    # TODO Missing connection from Character Unlocked to Phase One
+    def create_regions_infamy(self):
+        """
+        Region generation for Infamy levels
+        """
+        for infamy in self.world.options.goal_with_infamy:
+            self.add_region(f"Infamy {infamy}")
+            if infamy >= 1:
+                self.connections.append((f"Infamy {infamy-1}", f"Infamy {infamy}"))
+
     def connect_regions(self):
         for origin, destination in self.connections:
             connect_from = self.world.get_region(origin)
@@ -75,5 +89,7 @@ class RegionManager:
                     self.world.set_rule(entrance, Has(f"{sheriff} Unlock"))
 
     def set_completion(self):
-        pass
-        #world.set_completion_rule(Has("Victory"))
+        if self.world.options.goal == 0:
+            self.world.set_completion_rule(Has("Victory", self.world.options.goal_with_characters))
+        else:
+            self.world.set_completion_rule(Has("Victory"))

@@ -11,7 +11,7 @@ class Goal(Choice):
     option_undertaker = 0
     option_infamy = 1
 
-    default = option_infamy
+    default = option_undertaker
 
 class GoalWithCharacters(Range):
     """
@@ -29,7 +29,7 @@ class GoalWithInfamy(Range):
     Only applies if goal is set to option_infamy
     """
     display_name = "Goal With Infamy"
-    range_start = 1
+    range_start = 0
     range_end = 10
     default = 10
 
