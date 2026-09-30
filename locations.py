@@ -10,6 +10,7 @@ class LocationBuilder:
         self.data = data
         self.location_name_to_id = {}
 
+    # Create all possible locations
     def create_location_list(self):
         self.add_sheriff_locations()
         self.add_deputy_locations()
@@ -38,7 +39,7 @@ class LocationBuilder:
     def add_achievement_locations(self):
         pass
 
-    # probably not needed since all locations will be locked behind region locks
+    # boss checks if unlocksheriffs is toggled on
     def set_location_rules(self):
         pass
 
@@ -53,10 +54,12 @@ class LocationCreator:
         self.create_locations()
         self.create_completion()
 
+    # Create actual locations in the world
     # TODO Create actual locations in the world
     def create_locations(self):
         pass
 
+    # TODO Rework
     def create_completion(self):
         # Undertaker
         if self.world.options.goal == 0:
@@ -73,7 +76,6 @@ class LocationCreator:
                         f"Victory {character}", "Victory", location_type=BountyOfOneLocation,
                         item_type=items.BountyOfOneItem
                     )
-        # TODO Infamy
         if self.world.option.goal == 1:
             pass
 

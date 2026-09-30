@@ -1,4 +1,5 @@
 boo_data = {
+    ### GENERAL ###
     "characters": [
         "Serra",
         "Nigel",
@@ -13,33 +14,30 @@ boo_data = {
         "Richard",
         "Mitchell"
     ],
-    "sheriffs": {
-        "Simple Tom": 1,
-        "Rex, Cupcake and Brutus": 1,
-        "Ruthless Ruth": 2,
-        "Crazy Denzel": 2,
-        "Undertaker": 3,
-    },
-    "deputies": {
-        "Phase One": 100,
-        "Phase Two": 100,
-        "Phase Three": 100,
-    },
-    "choices": {
-        "Upgrade": 50,
-        "Object": 20,
-    },
-    "shop": {
-        # TODO
-    },
-    "level": [
-        "Level 10",
-        "Level 20",
-        "Level 30",
+    "sheriffs": [
+        "Simple Tom",
+        "Rex, Cupcake and Brutus",
+        "Ruthless Ruth",
+        "Crazy Denzel",
+        "Undertaker"
     ],
-    "achievements": {
-        #TODO
-    },
+    ### LOCATIONS
+    "locations_per_character": [
+        "Deputy Kill",
+        "Upgrade Choice",
+        "Object Choice",
+        "Sheriff Kill",
+        "Level reached"
+    ],
+    "locations_global": [
+        "Shop Purchase",
+        "Achievement"
+    ],
+    ### ITEMS ###
+    "unlocks": [
+        "characters",
+        "sheriffs",
+    ],
     "progressive": {
         "Upgrade Rarity": 5,
         "Object Rarity": 4,
@@ -91,14 +89,4 @@ boo_data = {
         "Pacifist Trap",
         "Dash Trap"
     ],
-    "regions": {
-        "Phase One": ["Simple Tom", "Rex, Cupcake and Brutus"],
-        "Phase Two": ["Ruthless Ruth", "Crazy Denzel"],
-        "Phase Three": ["Undertaker"],
-        "Simple Tom": ["Phase Two"],
-        "Rex, Cupcake and Brutus": ["Phase Two"],
-        "Ruthless Ruth": ["Phase Three"],
-        "Crazy Denzel": ["Phase Three"],
-        "Undertaker": [],
-    }
 }
