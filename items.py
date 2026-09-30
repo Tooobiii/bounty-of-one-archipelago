@@ -10,6 +10,7 @@ class ItemBuilder:
         self.item_name_to_id = {}
         self.default_item_classifications = {}
 
+    # Create all possible items
     def create_item_list(self):
         self.add_sheriff_unlocks()
         self.add_character_unlocks()
@@ -19,6 +20,7 @@ class ItemBuilder:
         self.add_traps()
         return self.item_name_to_id, self.default_item_classifications
 
+    # Helper function to add an item to the item list
     def add_item(self, name, classification):
         self.item_name_to_id[name] = self.next_id
         self.default_item_classifications[name] = classification
@@ -60,6 +62,7 @@ class ItemCreator:
         self.world = world
         self.data = data
 
+    # Create actual locations in the world
     # TODO Create all items in the world
     def create_all_items(self):
         pass

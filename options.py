@@ -1,37 +1,52 @@
 from dataclasses import dataclass
 
-from Options import Choice, PerGameCommonOptions, Range, DefaultOnToggle
+from Options import Choice, PerGameCommonOptions, Range, Toggle
 
-class Goal(Choice):
+class UnlockSheriffs(Toggle):
     """
-    What to do to goal
-    undertaker: Beat Undertaker with a number of characters
-    infamy: Finish a run with a certain Infamy Level (0-10)
+    Adds 5 items which each unlock one sheriff
+    Run ends early if you don't have the appropriate sheriff unlocked when it would normally appear
     """
-    option_undertaker = 0
-    option_infamy = 1
+    display_name = "Unlock Sheriffs"
 
-    default = option_infamy
-
-class GoalWithCharacters(Range):
+# TODO Check that CharacterPool >= CharacterRequired
+class CharacterPool(Range):
     """
-    Amount of Characters to beat Undertaker
-    Only applies if goal is set to option_undertaker
+    Amount of characters in the item pool
+    More characters create more locations
     """
-    display_name = "Goal With Characters"
+    display_name = "Character Pool"
     range_start = 1
     range_end = 12
-    default = 4
+    default = 12
 
-class GoalWithInfamy(Range):
+# TODO Check that MaxInfamy >= InfamyRequired
+class MaxInfamy(Range):
     """
-    Level of Infamy required for a run to count as goaled
-    Only applies if goal is set to option_infamy
+    How many progressive Infamy Items in the pool
     """
-    display_name = "Goal With Infamy"
-    range_start = 1
+    display_name = "Maximum Infamy"
+    range_start = 0
     range_end = 10
     default = 10
+
+class InfamyRequired(Range):
+    """
+    Minimum Infamy Level for a goaled run
+    """
+    display_name = "Infamy Required"
+    range_start = 0
+    range_end = 10
+    default = 10
+
+class CharacterRequired(Range):
+    """
+    Amount of distinct characters to goal a run
+    """
+    display_name = "Character Required"
+    range_start = 1
+    range_end = 12
+    default = 12
 
 class StartingCharacter(Choice):
     """
@@ -53,63 +68,31 @@ class StartingCharacter(Choice):
 
     default = option_serra
 
-class KillsPerCharacter(DefaultOnToggle):
+class DeputyLocations(Range):
     """
-    Should each character have their own deputy and sheriff checks?
-    If disabled, all those checks will consequently be in sphere 1.
+    Amount of Deputy Checks per Character (evenly distributed among Infamy Levels)
     """
-    display_name = "Deputy Kills per Character"
-
-class DeputyKillsPhaseOne(Range):
-    """
-    Amount of Deputy Checks in Phase One
-    """
-    display_name = "Deputy Kills Phase One"
+    display_name = "Amount of Deputy Locations"
     range_start = 0
     range_end = 100
     default = 20
 
-class DeputyKillsPhaseTwo(Range):
+class UpgradeLocations(Range):
     """
-    Amount of Deputy Checks in Phase Two
+    Amount of Upgrade Checks from LevelUp Chests per Character (evenly distributed among Infamy Levels)
     """
-    display_name = "Deputy Kills Phase Two"
+    display_name = "Amount of Upgrade Locations"
     range_start = 0
     range_end = 100
-    default = 15
-
-class DeputyKillsPhaseThree(Range):
-    """
-    Amount of Deputy Checks in Phase Three
-    """
-    display_name = "Deputy Kills Phase Three"
-    range_start = 0
-    range_end = 100
-    default = 10
-
-class ChestsPerCharacter(DefaultOnToggle):
-    """
-    Should each character have their own upgrade checks?
-    If disabled, all those checks will consequently be in sphere 1.
-    """
-    display_name = "Upgrade Amount per Character"
-
-class UpgradeAmount(Range):
-    """
-    Total amount of Upgrade Checks from LevelUp Chests
-    """
-    display_name = "Upgrades per Character"
-    range_start = 0
-    range_end = 200
     default = 50
 
-class ObjectAmount(Range):
+class ObjectLocations(Range):
     """
-    Total amount of Objects Checks from Deputy/Sheriff Chests
+    Amount of Object Checks from Deputy/Sheriff Chests per Character (evenly distributed among Infamy Levels)
     """
-    display_name = "Objects per Character"
+    display_name = "Amount of Object Locations"
     range_start = 0
-    range_end = 50
+    range_end = 100
     default = 10
 
 class TrapChance(Range):
@@ -123,15 +106,13 @@ class TrapChance(Range):
 
 @dataclass
 class BountyOfOneOptions(PerGameCommonOptions):
-    goal: Goal
-    goal_with_characters: GoalWithCharacters
-    goal_with_infamy: GoalWithInfamy
+    unlock_sheriffs: UnlockSheriffs
+    character_pool: CharacterPool
+    max_infamy: MaxInfamy
+    infamy_required: InfamyRequired
+    character_required: CharacterRequired
     starting_character: StartingCharacter
-    kills_per_character: KillsPerCharacter
-    phase_one_deputies: DeputyKillsPhaseOne
-    phase_two_deputies: DeputyKillsPhaseTwo
-    phase_three_deputies: DeputyKillsPhaseThree
-    chests_per_character: ChestsPerCharacter
-    upgrade_amount: UpgradeAmount
-    object_amount: ObjectAmount
+    deputy_amount: DeputyLocations
+    upgrade_amount: UpgradeLocations
+    object_amount: ObjectLocations
     trap_chance: TrapChance
