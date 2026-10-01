@@ -30,7 +30,7 @@ class MaxInfamy(Range):
     range_end = 10
     default = 10
 
-class InfamyRequired(Range):
+class InfamyGoal(Range):
     """
     Minimum Infamy Level for a goaled run
     """
@@ -39,7 +39,7 @@ class InfamyRequired(Range):
     range_end = 10
     default = 10
 
-class CharacterRequired(Range):
+class CharacterGoal(Range):
     """
     Amount of distinct characters to goal a run
     """
@@ -70,30 +70,30 @@ class StartingCharacter(Choice):
 
 class DeputyLocations(Range):
     """
-    Amount of Deputy Checks per Character (evenly distributed among Infamy Levels)
+    Amount of Deputy Checks per Character per Infamy
     """
     display_name = "Amount of Deputy Locations"
     range_start = 0
-    range_end = 100
-    default = 20
+    range_end = 20
+    default = 5
 
 class UpgradeLocations(Range):
     """
-    Amount of Upgrade Checks from LevelUp Chests per Character (evenly distributed among Infamy Levels)
+    Amount of Upgrade Checks from LevelUp Chests per Character per Infamy
     """
     display_name = "Amount of Upgrade Locations"
     range_start = 0
-    range_end = 100
-    default = 50
+    range_end = 20
+    default = 5
 
 class ObjectLocations(Range):
     """
-    Amount of Object Checks from Deputy/Sheriff Chests per Character (evenly distributed among Infamy Levels)
+    Amount of Object Checks from Deputy/Sheriff Chests per Character per Infamy
     """
     display_name = "Amount of Object Locations"
     range_start = 0
-    range_end = 100
-    default = 10
+    range_end = 20
+    default = 2
 
 class TrapChance(Range):
     """
@@ -109,8 +109,8 @@ class BountyOfOneOptions(PerGameCommonOptions):
     unlock_sheriffs: UnlockSheriffs
     character_pool: CharacterPool
     max_infamy: MaxInfamy
-    infamy_required: InfamyRequired
-    character_required: CharacterRequired
+    infamy_goal: InfamyGoal
+    character_goal: CharacterGoal
     starting_character: StartingCharacter
     deputy_amount: DeputyLocations
     upgrade_amount: UpgradeLocations
