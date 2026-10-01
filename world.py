@@ -3,6 +3,8 @@ from worlds.AutoWorld import World
 from . import items, locations, regions
 from . import options as boo_options
 from .data import boo_data
+from ..oot import location_name_to_id
+
 
 class BountyOfOneWorld(World):
     game = "Bounty of One"
@@ -22,12 +24,16 @@ class BountyOfOneWorld(World):
         self.item_creator = items.ItemCreator(self, boo_data)
         self.region_manager = regions.RegionManager(self, boo_data)
 
+        self.character_pool = self.world.random.sample(self.data["characters"], self.world.options.character_pool)
+
     def create_regions(self):
-        self.region_manager.create_and_connect_regions() # ALMOST DONE
-        self.location_creator.create_all_locations() # NOT DONE
+        self.region_manager.create_and_connect_regions() # DONE
+        self.location_creator.create_all_locations() # DONE
 
     def set_rules(self):
-        self.region_manager.set_all_rules() # ALMOST DONE
+        self.region_manager.set_all_rules() # DONE
+        if self.options.unlock_sheriffs:
+            self.location_creator.set_location_rules(location_name_to_id) # DONE
 
     def create_items(self):
         self.item_creator.create_all_items() # NOT DONE

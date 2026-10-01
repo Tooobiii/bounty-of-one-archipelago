@@ -8,7 +8,6 @@ class RegionManager:
         self.connections = []
 
     def create_and_connect_regions(self):
-        self.create_regions()
         self.connect_regions()
 
     def set_all_rules(self):
@@ -20,8 +19,7 @@ class RegionManager:
 
     def create_regions(self):
         self.add_region("Menu")
-        character_pool = self.world.random.sample(self.data["characters"], self.world.options.character_pool)
-        for character in character_pool:
+        for character in self.world.character_pool:
             for infamy in range(self.world.options.max_infamy + 1):
                 self.add_region(f"{character} Infamy {infamy}")
                 if infamy >= 1:
@@ -37,9 +35,6 @@ class RegionManager:
     def set_entrance_rules(self):
         for entrance in self.world.multiworld.get_entrances(self.world.player):
             if "Menu" in entrance.name:
-                pass
-
-            elif "Infamy 0" in entrance.name:
                 character = entrance.name.split()[0]
                 self.world.set_rule(entrance, Has(f"{character} Unlock"))
 
