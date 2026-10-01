@@ -8,6 +8,7 @@ class RegionManager:
         self.connections = []
 
     def create_and_connect_regions(self):
+        self.create_regions()
         self.connect_regions()
 
     def set_all_rules(self):
@@ -35,12 +36,11 @@ class RegionManager:
     def set_entrance_rules(self):
         for entrance in self.world.multiworld.get_entrances(self.world.player):
             if "Menu" in entrance.name:
-                character = entrance.name.split()[0]
-                self.world.set_rule(entrance, Has(f"{character} Unlock"))
-
+                character = entrance.name.split()[2]
+                self.world.set_rule(entrance, Has(f"Character {character} Unlock"))
             else:
                 infamy = int(entrance.name.split()[-1])
                 self.world.set_rule(entrance, Has("Progressive Infamy", infamy))
 
     def set_completion(self):
-        self.world.set_completion_rule(Has("Victory", self.world.options.character_required))
+        self.world.set_completion_rule(Has("Victory", self.world.options.character_goal.value))
