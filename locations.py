@@ -65,7 +65,7 @@ class LocationCreator:
 
     # Helper function to add a location to the world
     def add_location(self, region, name):
-        location_with_id = self.get_location_names_with_ids(name)
+        location_with_id = self.get_location_name_with_id(name)
         region.add_locations(location_with_id, BountyOfOneLocation)
 
     # Create actual locations in the world
@@ -80,44 +80,52 @@ class LocationCreator:
                 for upgrade_n in range(1, self.world.options.upgrade_amount + 1):
                     self.add_location(region, f"{character} - Upgrade {upgrade_n} #{infamy}")
 
-                for object_n in range(1, self.world.options.max_object + 1):
+                for object_n in range(1, self.world.options.object_amount + 1):
                     self.add_location(region, f"{character} - Object {object_n} #{infamy}")
 
                 for sheriff in self.data["sheriffs"]:
                     self.add_location(region, f"{character} - Sheriff {sheriff} #{infamy}")
 
-    def set_location_rules(self, location_name_to_id):
-        tom = Has("Simple Tom Unlock")
-        rex = Has("Rex, Cupcake and Brutus Unlock")
-        ruth = Has("Ruthless Ruth Unlock") & (tom | rex)
-        denzel = Has("Crazy Denzel Unlock") & (tom | rex)
-        undertaker = Has("Undertaker Unlock") & (ruth | denzel)
-
-        rules = {
-            "Simple Tom": tom,
-            "Rex, Cupcake and Brutus": rex,
-            "Ruthless Ruth": ruth,
-            "Crazy Denzel": denzel,
-            "Undertaker": undertaker,
-        }
-
-        for location_name in location_name_to_id:
+    def set_location_rules(self):
+        for location in self.world.multiworld.get_locations(self.world.player):
             for sheriff, rule in rules.items():
-                if sheriff in location_name:
-                    location = self.world.get_location(location_name)
+                if sheriff in location.name:
                     self.world.set_rule(location, rule)
                     break
 
     def create_completion(self):
         infamy_goal = self.world.options.infamy_goal
         for region in self.world.multiworld.get_regions(self.world.player):
-            if region.name.contains(f"Infamy {infamy_goal}"):
+            if f"Infamy {infamy_goal}" in region.name:
                 character = region.name.split()[0]
+                event_name = f"Victory {character}"
                 region.add_event(
-                    f"Victory {character}", "Victory", location_type=BountyOfOneLocation,
+                    event_name, "Victory", location_type=BountyOfOneLocation,
                     item_type=items.BountyOfOneItem
                 )
+
+                event = self.world.get_location(event_name)
+                self.world.set_rule(event, undertaker)
 
 
     def get_location_names_with_ids(self, location_names):
         return {location_name: self.world.location_name_to_id[location_name] for location_name in location_names}
+
+    def get_location_name_with_id(self, location_name):
+        return {location_name: self.world.location_name_to_id[location_name]}
+
+# TODO Create class?
+### RULES ###
+tom = Has("Sheriff Simple Tom Unlock")
+rex = Has("Sheriff Rex, Cupcake and Brutus Unlock")
+ruth = Has("Sheriff Ruthless Ruth Unlock") & (tom | rex)
+denzel = Has("Sheriff Crazy Denzel Unlock") & (tom | rex)
+undertaker = Has("Sheriff Undertaker Unlock") & (ruth | denzel)
+
+rules = {
+    "Simple Tom": tom,
+    "Rex, Cupcake and Brutus": rex,
+    "Ruthless Ruth": ruth,
+    "Crazy Denzel": denzel,
+    "Undertaker": undertaker,
+}
