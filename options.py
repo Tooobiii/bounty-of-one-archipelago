@@ -1,56 +1,81 @@
 from dataclasses import dataclass
 
-from Options import Choice, PerGameCommonOptions, Range, Toggle
+from Options import Choice, OptionGroup, PerGameCommonOptions, Range, Toggle
+from worlds.AutoWorld import WebWorld
 
-class UnlockSheriffs(Toggle):
+class CharacterCount(Range):
     """
-    Adds 5 items which each unlock one sheriff
-    Run ends early if you don't have the appropriate sheriff unlocked when it would normally appear
-    """
-    display_name = "Unlock Sheriffs"
-
-# TODO Check that CharacterPool >= CharacterRequired
-class CharacterPool(Range):
-    """
-    Amount of characters in the item pool
-    More characters create more locations
+    Set the number of characters that can be unlocked (including the starting character)
+    More characters add more checks
     """
     display_name = "Character Pool"
     range_start = 1
     range_end = 12
-    default = 12
+    default = 6
 
-# TODO Check that MaxInfamy >= InfamyRequired
-class MaxInfamy(Range):
+class DeputyCheckCount(Range):
     """
-    How many progressive Infamy Items in the pool
+    Number of Deputy checks available per Character and Infamy Level
     """
-    display_name = "Maximum Infamy"
+    display_name = "Deputies"
+    range_start = 0
+    range_end = 20
+    default = 4
+
+class MaxInfamyLevel(Range):
+    """
+    Maximum Infamy Level that can be unlocked
+    """
+    display_name = "Maximum Infamy Level"
     range_start = 0
     range_end = 10
-    default = 10
+    default = 8
 
-class InfamyGoal(Range):
+class ObjectCheckCount(Range):
     """
-    Minimum Infamy Level for a goaled run
+    Number of Object checks Chests per Character and Infamy Level
     """
-    display_name = "Infamy Required"
+    display_name = "Objects"
     range_start = 0
-    range_end = 10
-    default = 10
+    range_end = 20
+    default = 2
 
-class CharacterGoal(Range):
+class PermanentUpgradeCount(Range):
     """
-    Amount of distinct characters to goal a run
+    Set the number of permanent upgrades (per stat)
     """
-    display_name = "Character Required"
+    display_name = "Permanent Upgrades"
+    range_start = 0
+    range_end = 5
+    default = 1
+
+class RequiredCharacterCount(Range):
+    """
+    Number of different characters that must complete a run
+    """
+    display_name = "Character Count"
     range_start = 1
     range_end = 12
-    default = 12
+    default = 4
+
+class RequiredInfamyLevel(Range):
+    """
+    Minimum Infamy Level required for a completed run to count toward the goal
+    """
+    display_name = "Infamy Level"
+    range_start = 0
+    range_end = 10
+    default = 8
+
+class SheriffUnlocks(Toggle):
+    """
+    Adds unlock items for all five sheriffs
+    """
+    display_name = "Sheriff Unlocks"
 
 class StartingCharacter(Choice):
     """
-    The character which will be available from the start
+    Choose character to start with
     """
     display_name = "Starting Character"
     option_serra = 0
@@ -68,51 +93,59 @@ class StartingCharacter(Choice):
 
     default = option_serra
 
-class DeputyLocations(Range):
-    """
-    Amount of Deputy Checks per Character per Infamy
-    """
-    display_name = "Amount of Deputy Locations"
-    range_start = 0
-    range_end = 20
-    default = 5
-
-class UpgradeLocations(Range):
-    """
-    Amount of Upgrade Checks from LevelUp Chests per Character per Infamy
-    """
-    display_name = "Amount of Upgrade Locations"
-    range_start = 0
-    range_end = 20
-    default = 5
-
-class ObjectLocations(Range):
-    """
-    Amount of Object Checks from Deputy/Sheriff Chests per Character per Infamy
-    """
-    display_name = "Amount of Object Locations"
-    range_start = 0
-    range_end = 20
-    default = 2
-
 class TrapChance(Range):
     """
-    Chance for filler items to be replaced by traps
+    Percentage chance for filler items to be replaced by traps
     """
     display_name = "Trap Chance"
     range_start = 0
     range_end = 100
     default = 20
 
+class UpgradeCheckCount(Range):
+    """
+    Number of Upgrade checks per Character and Infamy Level
+    """
+    display_name = "Upgrades"
+    range_start = 0
+    range_end = 20
+    default = 4
+
 @dataclass
 class BountyOfOneOptions(PerGameCommonOptions):
-    unlock_sheriffs: UnlockSheriffs
-    character_pool: CharacterPool
-    max_infamy: MaxInfamy
-    infamy_goal: InfamyGoal
-    character_goal: CharacterGoal
     starting_character: StartingCharacter
-    deputy_amount: DeputyLocations
-    upgrade_amount: UpgradeLocations
-    object_amount: ObjectLocations
+    character_count: CharacterCount
+    max_infamy_level: MaxInfamyLevel
+    sheriff_unlocks: SheriffUnlocks
     trap_chance: TrapChance
+
+    required_character_count: RequiredCharacterCount
+    required_infamy_level: RequiredInfamyLevel
+
+    deputy_check_count: DeputyCheckCount
+    upgrade_check_count: UpgradeCheckCount
+    object_check_count: ObjectCheckCount
+
+    permanent_upgrade_count: PermanentUpgradeCount
+
+option_groups = [
+    OptionGroup(
+        "General",
+        [StartingCharacter, CharacterCount, MaxInfamyLevel, SheriffUnlocks, TrapChance],
+    ),
+    OptionGroup(
+        "Goal Requirements",
+        [RequiredCharacterCount, RequiredInfamyLevel],
+    ),
+    OptionGroup(
+        "Locations",
+        [DeputyCheckCount, UpgradeCheckCount, ObjectCheckCount],
+    ),
+    OptionGroup(
+        "Items",
+        [PermanentUpgradeCount],
+    ),
+]
+
+class APQuestWebWorld(WebWorld):
+    option_groups = option_groups

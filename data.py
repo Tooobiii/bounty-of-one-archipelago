@@ -1,3 +1,5 @@
+from rule_builder.rules import Has
+
 boo_data = {
     ### GENERAL ###
     "characters": [
@@ -89,3 +91,20 @@ boo_data = {
         "Dash Trap"
     ],
 }
+
+class Rules:
+    def __init__(self):
+        self.tom = Has("Sheriff Simple Tom Unlock")
+        self.rex = Has("Sheriff Rex, Cupcake and Brutus Unlock")
+        self.ruth = Has("Sheriff Ruthless Ruth Unlock") & (self.tom | self.rex)
+        self.denzel = Has("Sheriff Crazy Denzel Unlock") & (self.tom | self.rex)
+        self.undertaker = Has("Sheriff Undertaker Unlock") & (self.ruth | self.denzel)
+
+    def sheriff_rules(self):
+        return {
+            "Simple Tom": self.tom,
+            "Rex, Cupcake and Brutus": self.rex,
+            "Ruthless Ruth": self.ruth,
+            "Crazy Denzel": self.denzel,
+            "Undertaker": self.undertaker,
+        }

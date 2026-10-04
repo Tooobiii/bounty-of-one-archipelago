@@ -16,12 +16,12 @@ class RegionManager:
         self.set_completion()
 
     def add_region(self, name):
-        self.world.multiworld.regions.append(Region(name,self.world.player,self.world.multiworld))
+        self.world.multiworld.regions.append(Region(name, self.world.player, self.world.multiworld))
 
     def create_regions(self):
         self.add_region("Menu")
         for character in self.world.character_pool:
-            for infamy in range(self.world.options.max_infamy + 1):
+            for infamy in range(self.world.options.max_infamy_level + 1):
                 self.add_region(f"{character} Infamy {infamy}")
                 if infamy >= 1:
                     self.connections.append((f"{character} Infamy {infamy - 1}", f"{character} Infamy {infamy}"))
@@ -43,4 +43,4 @@ class RegionManager:
                 self.world.set_rule(entrance, Has("Progressive Infamy", infamy))
 
     def set_completion(self):
-        self.world.set_completion_rule(Has("Victory", self.world.options.character_goal.value))
+        self.world.set_completion_rule(Has("Victory", self.world.options.required_character_count.value))

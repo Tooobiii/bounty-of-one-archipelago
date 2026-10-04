@@ -1,5 +1,5 @@
 from BaseClasses import Location
-from rule_builder.rules import Has, HasAll, Rule
+
 from . import items
 
 class BountyOfOneLocation(Location):
@@ -71,30 +71,31 @@ class LocationCreator:
     # Create actual locations in the world
     def create_locations(self):
         for character in self.world.character_pool:
-            for infamy in range(self.world.options.max_infamy + 1):
+            for infamy in range(self.world.options.max_infamy_level + 1):
                 region = self.world.get_region(f"{character} Infamy {infamy}")
 
-                for deputy_n in range(1, self.world.options.deputy_amount + 1):
+                for deputy_n in range(1, self.world.options.deputy_check_count + 1):
                     self.add_location(region, f"{character} - Deputy {deputy_n} #{infamy}")
 
-                for upgrade_n in range(1, self.world.options.upgrade_amount + 1):
+                for upgrade_n in range(1, self.world.options.upgrade_check_count + 1):
                     self.add_location(region, f"{character} - Upgrade {upgrade_n} #{infamy}")
 
-                for object_n in range(1, self.world.options.object_amount + 1):
+                for object_n in range(1, self.world.options.object_check_count + 1):
                     self.add_location(region, f"{character} - Object {object_n} #{infamy}")
 
                 for sheriff in self.data["sheriffs"]:
                     self.add_location(region, f"{character} - Sheriff {sheriff} #{infamy}")
 
     def set_location_rules(self):
+        sheriff_rules = self.world.rules.sheriff_rules()
         for location in self.world.multiworld.get_locations(self.world.player):
-            for sheriff, rule in rules.items():
+            for sheriff, rule in sheriff_rules.items():
                 if sheriff in location.name:
                     self.world.set_rule(location, rule)
                     break
 
     def create_completion(self):
-        infamy_goal = self.world.options.infamy_goal
+        infamy_goal = self.world.options.required_infamy_level
         for region in self.world.multiworld.get_regions(self.world.player):
             if f"Infamy {infamy_goal}" in region.name:
                 character = region.name.split()[0]
@@ -105,7 +106,7 @@ class LocationCreator:
                 )
 
                 event = self.world.get_location(event_name)
-                self.world.set_rule(event, undertaker)
+                self.world.set_rule(event, self.world.rules.undertaker)
 
 
     def get_location_names_with_ids(self, location_names):
@@ -113,19 +114,3 @@ class LocationCreator:
 
     def get_location_name_with_id(self, location_name):
         return {location_name: self.world.location_name_to_id[location_name]}
-
-# TODO Create class?
-### RULES ###
-tom = Has("Sheriff Simple Tom Unlock")
-rex = Has("Sheriff Rex, Cupcake and Brutus Unlock")
-ruth = Has("Sheriff Ruthless Ruth Unlock") & (tom | rex)
-denzel = Has("Sheriff Crazy Denzel Unlock") & (tom | rex)
-undertaker = Has("Sheriff Undertaker Unlock") & (ruth | denzel)
-
-rules = {
-    "Simple Tom": tom,
-    "Rex, Cupcake and Brutus": rex,
-    "Ruthless Ruth": ruth,
-    "Crazy Denzel": denzel,
-    "Undertaker": undertaker,
-}
