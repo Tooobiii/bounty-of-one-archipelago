@@ -105,8 +105,9 @@ class LocationCreator:
                     item_type=items.BountyOfOneItem
                 )
 
-                event = self.world.get_location(event_name)
-                self.world.set_rule(event, self.world.rules.undertaker)
+                if self.world.options.sheriff_unlocks:
+                    event = self.world.get_location(event_name)
+                    self.world.set_rule(event, self.world.rules.undertaker)
 
 
     def get_location_names_with_ids(self, location_names):
